@@ -78,7 +78,24 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   // ⬆️ ⬆️ ⬆️ 
   // End Step 3
 
+
   // Step 4: 
+  // ⬇️ ⬇️ ⬇️
+  let db = firebase.firestore()
+  let querySnapshot = await db.collection('watched').get()
+  let movieList = querySnapshot.docs
+  for (let i = 0; i < movieList.length; i++) {
+    let movieData = movieList[i].data()
+    let movieName = movieData.movie
+    console.log(movieData); // array holding text - L1
+    console.log(movieName); // actual text - L0
+  }
+
+
+
+  // ⬆️ ⬆️ ⬆️ 
+  // reference the "to-do" list in class to figure out this functionality
+
   // - Properly configure Firebase and Firebase Cloud Firestore
   // - Inside your "watched button" event listener, you wrote in
   //   step 3, after successfully setting opacity, persist data
