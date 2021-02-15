@@ -5,12 +5,36 @@
 // prepend with `https://image.tmdb.org/t/p/w500/` to get the 
 // complete image URL
 
+function printMovie(moviePoster) {
+  console.log(moviePoster);
+}
+
 window.addEventListener('DOMContentLoaded', async function (event) {
   // Step 1: Construct a URL to get movies playing now from TMDB, fetch
   // data and put the Array of movie Objects in a variable called
   // movies. Write the contents of this array to the JavaScript
   // console to ensure you've got good data
   // ⬇️ ⬇️ ⬇️
+
+  let response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=426eb0f90521d4c76fbc67a9acd43da6&language=en-US`)
+  let json = await response.json()
+  let movies = json.results
+
+
+
+  for (let i = 0; i < movies.length; i++) {
+    let movie = movies[i]
+    // console.log(movie);
+    let movieID = movie.id
+    let movieTitle = movie.original_title
+    let moviePosterFileName = movie.poster_path
+    let moviePoster = `https://image.tmdb.org/t/p/w500/${moviePosterFileName}`
+    // console.log(`${movieID} - ${movieTitle}`);
+    // console.log(moviePoster);
+
+    printMovie(moviePoster)
+  }
+
 
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
