@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
       `
       <div class="w-1/5 p-4 movie-${movieID}">
         <img src="${moviePoster}" class="w-full">
-        <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
+        <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
       </div>
       `
     )
@@ -69,7 +69,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   //   to remove the class if the element already contains it.
   // ⬇️ ⬇️ ⬇️
   function movieListener(movieID) {
-    document.querySelector(".watched-button").addEventListener("click", async function (event) {
+    document.querySelector(`.watched-button-${movieID}`).addEventListener("click", async function (event) {
       event.preventDefault()
       document.querySelector(`.movie-${movieID}`).classList.add('opacity-20')
       console.log(`Someone watched movie ${movieID}.`)
