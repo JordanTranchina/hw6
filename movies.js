@@ -5,8 +5,16 @@
 // prepend with `https://image.tmdb.org/t/p/w500/` to get the 
 // complete image URL
 
-function printMovie(moviePoster) {
+function printMovie(movieID, moviePoster) {
   console.log(moviePoster);
+  document.querySelector(".movies").insertAdjacentHTML("beforeend",
+    `
+    <div class="w-1/5 p-4 movie-${movieID}">
+      <img src="${moviePoster}" class="w-full">
+      <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
+    </div>
+  `
+  )
 }
 
 window.addEventListener('DOMContentLoaded', async function (event) {
@@ -15,12 +23,9 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   // movies. Write the contents of this array to the JavaScript
   // console to ensure you've got good data
   // ⬇️ ⬇️ ⬇️
-
   let response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=426eb0f90521d4c76fbc67a9acd43da6&language=en-US`)
   let json = await response.json()
   let movies = json.results
-
-
 
   for (let i = 0; i < movies.length; i++) {
     let movie = movies[i]
@@ -29,13 +34,10 @@ window.addEventListener('DOMContentLoaded', async function (event) {
     let movieTitle = movie.original_title
     let moviePosterFileName = movie.poster_path
     let moviePoster = `https://image.tmdb.org/t/p/w500/${moviePosterFileName}`
-    // console.log(`${movieID} - ${movieTitle}`);
+    console.log(`${movieID} - ${movieTitle}`);
     // console.log(moviePoster);
-
-    printMovie(moviePoster)
+    printMovie(movieID, moviePoster)
   }
-
-
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
 
