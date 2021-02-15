@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
 
   for (let i = 0; i < movies.length; i++) {
     let movie = movies[i]
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ----------- TURN THIS ON BEFORE SUBMITTING -------- !!!!!!!!!!!
+    //  TURN THIS ON BEFORE SUBMITTING
     // console.log(movie);
     let movieID = movie.id
     let movieTitle = movie.original_title
