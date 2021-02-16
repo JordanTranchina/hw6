@@ -11,6 +11,16 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   // movies. Write the contents of this array to the JavaScript
   // console to ensure you've got good data
   // ⬇️ ⬇️ ⬇️
+  let db = firebase.firestore()
+  let querySnapshot = await db.collection('watched').get()
+  let movieList = querySnapshot.docs
+  for (let i = 0; i < movieList.length; i++) {
+    let movieData = movieList[i].data() // object / array level
+    let movieName = movieData.movie  // attribute level
+    // console.log(movieData);
+    // console.log(movieName);
+  }
+
   let response = await fetch(`https://api.themoviedb.org/3/movie/now_playing?api_key=426eb0f90521d4c76fbc67a9acd43da6&language=en-US`)
   let json = await response.json()
   let movies = json.results
@@ -23,10 +33,15 @@ window.addEventListener('DOMContentLoaded', async function (event) {
     let movieTitle = movie.original_title
     let moviePosterFileName = movie.poster_path
     let moviePoster = `https://image.tmdb.org/t/p/w500/${moviePosterFileName}`
-    console.log(`${movieID} - ${movieTitle}`);
+    // console.log(`${movieID} - ${movieTitle}`);
     // console.log(moviePoster);
-    printMovie(movieID, moviePoster)
+    let docRef = await db.collection('watched').doc(`${movieID}`).get()
+    let item = docRef.data()
+    console.log(item);
+
+    printMovie(movieID, moviePoster, item)
     movieListener(movieID, movieTitle)
+
   }
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
@@ -43,16 +58,44 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   //   <a href="#" class="watched-button block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
   // </div>
   // ⬇️ ⬇️ ⬇️
-  function printMovie(movieID, moviePoster) {
-    console.log(moviePoster);
-    document.querySelector(".movies").insertAdjacentHTML("beforeend",
-      `
-      <div class="w-1/5 p-4 movie-${movieID}">
-        <img src="${moviePoster}" class="w-full">
-        <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
-      </div>
-      `
-    )
+  async function printMovie(movieID, moviePoster, item) {
+    // console.log(moviePoster);
+
+    // if movie has been watched then ensure opacity is 20
+    // let docRef = await db.collection('watched').doc(`${movieID}`).get()
+    // console.log(docRef);
+
+    if (item) {
+      console.log("this movie exists");
+      document.querySelector(".movies").insertAdjacentHTML("beforeend",
+        `
+          <div class="w-1/5 p-4 movie-${movieID} opacity-20">
+            <img src="${moviePoster}" class="w-full">
+            <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
+          </div>
+        `
+      )
+    } else {
+      console.log("this movie does not exist");
+      document.querySelector(".movies").insertAdjacentHTML("beforeend",
+        `
+          <div class="w-1/5 p-4 movie-${movieID}">
+            <img src="${moviePoster}" class="w-full">
+            <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
+          </div>
+        `
+      )
+    }
+    // else, movie should have full opacity
+
+    // document.querySelector(".movies").insertAdjacentHTML("beforeend",
+    //   `
+    //   <div class="w-1/5 p-4 movie-${movieID}">
+    //     <img src="${moviePoster}" class="w-full">
+    //     <a href="#" class="watched-button-${movieID} block text-center text-white bg-green-500 mt-4 px-4 py-2 rounded">I've watched this!</a>
+    //   </div>
+    //   `
+    // )
   }
   // ⬆️ ⬆️ ⬆️ 
   // End Step 2
@@ -69,15 +112,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   //   to remove the class if the element already contains it.
 
 
-  let db = firebase.firestore()
-  let querySnapshot = await db.collection('watched').get()
-  let movieList = querySnapshot.docs
-  for (let i = 0; i < movieList.length; i++) {
-    let movieData = movieList[i].data() // object / array level
-    let movieName = movieData.movie  // attribute level
-    console.log(movieData);
-    console.log(movieName);
-  }
+
 
 
   // ⬇️ ⬇️ ⬇️
@@ -90,8 +125,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
       await db.collection('watched').doc(`${movieID}`).set({
         movie: `${movieName}`
       })
-
-
+      // movieChecker(635302)
     })
   }
   // ⬆️ ⬆️ ⬆️ 
