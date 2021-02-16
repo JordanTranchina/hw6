@@ -26,7 +26,7 @@ window.addEventListener('DOMContentLoaded', async function (event) {
     console.log(`${movieID} - ${movieTitle}`);
     // console.log(moviePoster);
     printMovie(movieID, moviePoster)
-    movieListener(movieID)
+    movieListener(movieID, movieTitle)
   }
   // ⬆️ ⬆️ ⬆️ 
   // End Step 1
@@ -67,12 +67,31 @@ window.addEventListener('DOMContentLoaded', async function (event) {
   //   using .classList.contains('opacity-20') to check if 
   //   the movie is watched. Use .classList.remove('opacity-20')
   //   to remove the class if the element already contains it.
+
+
+  let db = firebase.firestore()
+  let querySnapshot = await db.collection('watched').get()
+  let movieList = querySnapshot.docs
+  for (let i = 0; i < movieList.length; i++) {
+    let movieData = movieList[i].data() // object / array level
+    let movieName = movieData.movie  // attribute level
+    console.log(movieData);
+    console.log(movieName);
+  }
+
+
   // ⬇️ ⬇️ ⬇️
-  function movieListener(movieID) {
+  function movieListener(movieID, movieName) {
     document.querySelector(`.watched-button-${movieID}`).addEventListener("click", async function (event) {
       event.preventDefault()
       document.querySelector(`.movie-${movieID}`).classList.add('opacity-20')
       console.log(`Someone watched movie ${movieID}.`)
+
+      await db.collection('watched').doc(`${movieID}`).set({
+        movie: `${movieName}`
+      })
+
+
     })
   }
   // ⬆️ ⬆️ ⬆️ 
@@ -80,21 +99,6 @@ window.addEventListener('DOMContentLoaded', async function (event) {
 
 
   // Step 4: 
-  // ⬇️ ⬇️ ⬇️
-  let db = firebase.firestore()
-  let querySnapshot = await db.collection('watched').get()
-  let movieList = querySnapshot.docs
-  for (let i = 0; i < movieList.length; i++) {
-    let movieData = movieList[i].data()
-    let movieName = movieData.movie
-    console.log(movieData); // array holding text - L1
-    console.log(movieName); // actual text - L0
-  }
-
-
-
-  // ⬆️ ⬆️ ⬆️ 
-  // reference the "to-do" list in class to figure out this functionality
 
   // - Properly configure Firebase and Firebase Cloud Firestore
   // - Inside your "watched button" event listener, you wrote in
